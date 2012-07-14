@@ -9,7 +9,8 @@ module HandlebarsAssets
     def evaluate(scope, locals, &block)
       name = basename(scope.logical_path)
       relative_path = scope.logical_path.gsub(/^templates\/(.*)$/i, "\\1")
-      compiled_hbs = Handlebars.precompile(data)
+      handlebars = ::Haml::Engine.new(data, locals).render.gsub(/\n/m, "").strip
+      compiled_hbs = Handlebars.precompile(handlebars)
 
       if name.start_with?('_')
         partial_name = relative_path.gsub(/\//, '_').gsub(/__/, '_').dump
@@ -27,6 +28,10 @@ module HandlebarsAssets
             return HandlebarsTemplates[#{template_name}];
           }).call(this);
         TEMPLATE
+      end
+    private
+      def compressanddecode(string)
+        ::Haml::Engine.new(string, {}).render.gsub(/\n/m, "").strip
       end
     end
 
