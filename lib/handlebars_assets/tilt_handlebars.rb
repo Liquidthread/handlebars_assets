@@ -29,10 +29,6 @@ module HandlebarsAssets
           }).call(this);
         TEMPLATE
       end
-    private
-      def compressanddecode(string)
-        ::Haml::Engine.new(string, {}).render.gsub(/\n/m, "").strip
-      end
     end
 
     protected
